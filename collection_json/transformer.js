@@ -1,4 +1,5 @@
 var _ = require('lodash')
+var hostUrl = 'http://localhost:3001/';
 
 function layout(url, items) {
     return (
@@ -8,14 +9,14 @@ function layout(url, items) {
             href: url,
 
             links: [
-                {rel: 'index', href: 'http://localhost:3001/'}
+                {rel: 'index', href: hostUrl}
             ],
 
             items: items,
 
             queries: [
                 {
-                    rel: 'search', href: 'http://localhost:3001/search', prompt: 'Search',
+                    rel: 'search', href: hostUrl + '/search', prompt: 'Search',
                     data: [
                         {name: 'host', value: '', type: 'text'},
                         {name: 'speaker_id', value: '', type: 'text'},
@@ -45,7 +46,7 @@ function days(days) {
 function day(day) {
     return (
         {
-            href: 'http://localhost:3000/' + day.id,
+            href: hostUrl + day.id,
             data: [
                 {name: 'id', value: day.id, prompt: 'ID'},
                 {name: 'date', value: day.date, prompt: 'Date'},
