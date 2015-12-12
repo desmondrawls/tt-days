@@ -1,0 +1,68 @@
+doctype html
+html(lang="en")
+    head
+        title = "Days Index"
+        script(src="/jquery/jquery.js")
+        link(rel='stylesheet', href='/stylesheets/main.css')
+    body
+        h1 Days
+        ul
+            each day in days
+                li
+                    a(href='/' + day.id)= day.date + ' with ' + day.speaker_id
+        p.old
+            a(href='#' onclick='showNew()')= "New"
+
+        dl.new
+            dt= "Date"
+            dd
+                input#date(type="text")
+            br
+            dt= "Host"
+            dd
+                input#host(type="text")
+            br
+            dt= "Conflict"
+            dd
+                input#conflict(type="text")
+            br
+            dt
+                dd
+                    input(type='submit' value='Save' onClick='save()')
+                    input(type='submit' value='Cancel' onClick='cancel()')
+            br
+
+        script.
+            function showNew() {
+                $('.old').hide()
+                $('.new').show()
+            }
+
+            function cancel() {
+                $('.new').hide()
+                $('.old').show()
+            }
+
+            function save() {
+                console.log("saving")
+                $.ajax('/', {
+                    method: 'POST',
+                    data: dayTemplate(),
+                    complete: function () {
+                        cancel()
+                        location.reload()
+                    }
+                })
+            }
+
+            function dayTemplate() {
+                return {
+                    'template': {
+                        'data': [
+                            {'name': 'conflict', 'prompt': 'Conflict', 'value': $('#conflict').val()},
+                            {'name': 'date', 'prompt': 'Date', 'value': $('#date').val()},
+                            {'name': 'host', 'prompt': 'Host', 'value': $('#host').val()}
+                        ]
+                    }
+                }
+            }

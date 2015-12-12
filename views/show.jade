@@ -1,0 +1,85 @@
+doctype html
+html(lang="en")
+    head
+        title = "Day Show"
+        script(src="/jquery/jquery.js")
+        link(rel='stylesheet', href='/stylesheets/main.css')
+    body
+        h1= day.date + ' ' + day.host
+        div.nav
+            a(href='/')= "Back to Days List"
+
+        dl
+            dt= "Date"
+                dd.view= day.date
+                dd.edit
+                    input#date(type="text" value= day.date)
+            br
+            dt= "Speaker"
+            dd.view= day.speaker_id
+            dd.edit
+                input#speaker(type="text" value= day.speaker_id)
+            br
+            dt= "Host"
+                dd.view= day.host
+                dd.edit
+                    input#host(type="text" value= day.host)
+            br
+            dt= "Conflict"
+                dd.view= day.conflict
+                dd.edit
+                    input#conflict(type="text" value= day.conflict)
+            br
+            dt
+                dd.edit
+                    input(type='submit' value='Save' onClick='save("#{day.id}")')
+                    input(type='submit' value='Cancel' onClick='cancel()')
+            br
+
+
+        p
+            a(href='#' onclick='edit()')= "Edit "
+            a(href='#' onclick='drop("#{day.id}")')= "Drop"
+
+        script.
+            function edit() {
+                $('.view').hide()
+                $('.edit').show()
+            }
+
+            function cancel() {
+                $('.edit').hide()
+                $('.view').show()
+            }
+
+            function save(dayId) {
+                $.ajax('/' + dayId, {
+                    method: 'PUT',
+                    data: dayTemplate(),
+                    complete: function () {
+                        cancel()
+                        location.reload()
+                    }
+                })
+            }
+
+            function dayTemplate() {
+                return {
+                    'template': {
+                        'data': [
+                            {'name': 'conflict', 'prompt': 'Conflict', 'value': $('#conflict').val()},
+                            {'name': 'date', 'prompt': 'Date', 'value': $('#date').val()},
+                            {'name': 'speaker_id', 'prompt': 'Speaker', 'value': $('#speaker').val()},
+                            {'name': 'host', 'prompt': 'Host', 'value': $('#host').val()}
+                        ]
+                    }
+                }
+            }
+            function drop(dayId) {
+                    $.ajax('/' + dayId, {
+                    method: 'DELETE',
+                    complete: function () {
+                        location = '/'
+                    }
+                })
+            }
